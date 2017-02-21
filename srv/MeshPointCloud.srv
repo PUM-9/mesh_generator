@@ -1,0 +1,5 @@
+sensor_msgs/PointCloud2 point_cloud
+---
+shape_msgs/Mesh mesh
+int16 exit_code
+string error_message
