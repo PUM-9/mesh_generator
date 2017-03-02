@@ -1,5 +1,7 @@
 //
 // A client that calls the mesh service to test it
+// Needs the files lamppost.pcd, ism_test_cat.pcd and ism_test_wolf.pcd
+// to send to the meshing service
 //
 #include "ros/ros.h"
 #include <pcl/io/pcd_io.h>

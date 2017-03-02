@@ -1,5 +1,5 @@
 //
-//
+// Module for generating meshes from point clouds
 //
 #include <vector>
 #include <pcl/point_types.h>
