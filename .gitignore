@@ -138,3 +138,6 @@ ENV/
 .ropeproject
 
 # End of https://www.gitignore.io/api/python,c++
+
+
+cmake-build-debug/*
