@@ -18,7 +18,6 @@
 #include "mesh_generator/MeshPointCloud.h"
 #include <pcl_msgs/PolygonMesh.h>
 
-
 typedef mesh_generator::MeshPointCloud::Request MeshPointCloudRequest;
 typedef mesh_generator::MeshPointCloud::Response MeshPointCloudResponse;
 typedef pcl::PointCloud<pcl::PointXYZ> PointCloud;
@@ -43,12 +42,21 @@ NormalCloud::Ptr estimate_normals(PointCloud::Ptr point_cloud)
     search_tree->setInputCloud(point_cloud);
     normal_estimation.setInputCloud(point_cloud);
     normal_estimation.setSearchMethod(search_tree);
+
+    // When estimating normals, the algorithm looks at the nearest neighbors of every point
+    // and fits a plane to these points as close as it can. The normal of this plane is
+    // the estimated normal of the point.
+    // This sets how many of the nearest neighbors to look at when estimating normals.
+    // Is a rough setting for accuracy that can be adjusted.
+    // A lower number here means that corners in the point cloud will be more accurate,
+    // too low a number will cause problems.
     normal_estimation.setKSearch(20);
 
     // Perform normal estimation algorithm
     normal_estimation.compute(*normals);
 
-    // Reverse the direction of all normals
+    // Reverse the direction of all normals so that the face of the object points outwards.
+    // Should not be necessary but it is easier when visualising the object in MeshLab etc.
     for (size_t i = 0; i < normals->size(); ++i) {
         normals->points[i].normal_x *= -1;
         normals->points[i].normal_y *= -1;
@@ -63,7 +71,9 @@ NormalCloud::Ptr estimate_normals(PointCloud::Ptr point_cloud)
  * with normals
  *
  * @param point_cloud The point cloud (including normals) that is used to generate the mesh
- * @param mesh The resulting 3D-mesh is saved to mesh
+ * @param mesh The resulting 3D-mesh is saved to this reference so that it can be used from
+ *             outside the function. This avoids having to return a copy of a PolygonMesh
+ *             object which could be very big.
  */
 void poisson_reconstruction(pcl::PointCloud<pcl::PointNormal>::Ptr point_cloud, pcl::PolygonMesh& mesh)
 {
@@ -71,10 +81,15 @@ void poisson_reconstruction(pcl::PointCloud<pcl::PointNormal>::Ptr point_cloud, 
 
     // Initialize poisson reconstruction
     pcl::Poisson<pcl::PointNormal> poisson;
+
+    // Set the maximum depth of the tree used in Poisson surface reconstruction.
+    // A higher value means more iterations which could lead to better results but
+    // it is also more computaionally heavy.
     poisson.setDepth(9);
+    
     poisson.setInputCloud(point_cloud);
 
-    // Perform the poisson surface reconstruction algorithm
+    // Perform the Poisson surface reconstruction algorithm
     poisson.reconstruct(mesh);
 }
 
