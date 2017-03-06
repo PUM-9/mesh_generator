@@ -84,9 +84,11 @@ void poisson_reconstruction(pcl::PointCloud<pcl::PointNormal>::Ptr point_cloud, 
     // Initialize poisson reconstruction
     pcl::Poisson<pcl::PointNormal> poisson;
 
-    // Set the maximum depth of the tree used in Poisson surface reconstruction.
-    // A higher value means more iterations which could lead to better results but
-    // it is also more computaionally heavy.
+    /*
+     * Set the maximum depth of the tree used in Poisson surface reconstruction.
+     * A higher value means more iterations which could lead to better results but
+     * it is also more computaionally heavy.
+     */
     poisson.setDepth(9);
     
     poisson.setInputCloud(point_cloud);
