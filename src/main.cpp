@@ -43,13 +43,15 @@ NormalCloud::Ptr estimate_normals(PointCloud::Ptr point_cloud)
     normal_estimation.setInputCloud(point_cloud);
     normal_estimation.setSearchMethod(search_tree);
 
-    // When estimating normals, the algorithm looks at the nearest neighbors of every point
-    // and fits a plane to these points as close as it can. The normal of this plane is
-    // the estimated normal of the point.
-    // This sets how many of the nearest neighbors to look at when estimating normals.
-    // Is a rough setting for accuracy that can be adjusted.
-    // A lower number here means that corners in the point cloud will be more accurate,
-    // too low a number will cause problems.
+    /*
+     * When estimating normals, the algorithm looks at the nearest neighbors of every point
+     * and fits a plane to these points as close as it can. The normal of this plane is
+     * the estimated normal of the point.
+     * This sets how many of the nearest neighbors to look at when estimating normals.
+     * Is a rough setting for accuracy that can be adjusted.
+     * A lower number here means that corners in the point cloud will be more accurate,
+     * too low a number will cause problems.
+     */
     normal_estimation.setKSearch(20);
 
     // Perform normal estimation algorithm
