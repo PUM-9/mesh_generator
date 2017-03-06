@@ -11,6 +11,9 @@ find_package(catkin REQUIRED COMPONENTS
   shape_msgs
   std_msgs
   message_generation
+  pcl_conversions
+  pcl_ros
+  pcl_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -47,11 +50,10 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
+#add_message_files(
+#  FILES
+#  Message1.msg
+#)
 
 ## Generate services in the 'srv' folder
 add_service_files(
@@ -69,7 +71,7 @@ add_service_files(
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
   DEPENDENCIES
-  sensor_msgs shape_msgs std_msgs
+  sensor_msgs pcl_msgs std_msgs
 )
 
 ################################################
@@ -104,7 +106,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES mesh_generator
-  CATKIN_DEPENDS roscpp rospy sensor_msgs shape_msgs std_msgs
+  CATKIN_DEPENDS roscpp rospy sensor_msgs pcl_msgs std_msgs
 #  DEPENDS system_lib
 )
 
@@ -130,16 +132,21 @@ include_directories(
 # add_dependencies(mesh_generator ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
-# add_executable(mesh_generator_node src/mesh_generator_node.cpp)
+add_executable(main src/main.cpp)
+add_executable(test_client src/test_client.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 # add_dependencies(mesh_generator_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(mesh_generator_node
-#   ${catkin_LIBRARIES}
-# )
+target_link_libraries(main
+  ${catkin_LIBRARIES}
+)
+
+target_link_libraries(test_client
+  ${catkin_LIBRARIES}
+)
 
 #############
 ## Install ##
